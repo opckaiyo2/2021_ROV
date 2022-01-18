@@ -6,13 +6,8 @@ import sys
   
 class TCPHandler2(socketserver.BaseRequestHandler):  
     def handle(self):
-        print('handler1')
         self.data = self.request.recv(1024).strip()
-        #ret, frame=capture.read()
         ret, frame=capture2.read()
-        #jpegstring=cv2.imencode('.jpg', frame)[1].tostring()
-        #print(len(jpegstring),'Byte2')  
-        #elf.request.send(jpegstring)
         jpegstring2=cv2.imencode('.jpg', frame)[1].tostring()
         self.request.send(jpegstring2)
         print('handler2')  
@@ -23,11 +18,13 @@ PORT2 = 50001
 
 #カメラの設定
 #capture=cv2.VideoCapture()
-#capture.set(3,320)
-#capture.set(4,240)
 capture2=cv2.VideoCapture(2)
+#capture2.set(3,640)
+#capture2.set(4,480)
 capture2.set(3,320)
 capture2.set(4,240)
+#capture2.set(3,640)
+#capture2.set(4,480)
 if not capture2:  
     print("Could not open camera")  
     sys.exit()

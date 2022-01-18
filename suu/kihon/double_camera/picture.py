@@ -22,7 +22,7 @@ HOST = '172.21.25.230'
 PORT = 50000
 
 #カメラの設定
-capture=cv2.VideoCapture(0)
+capture=cv2.VideoCapture(2)
 capture.set(3,640)
 capture.set(4,480)
 #capture2=cv2.VideoCapture(2)

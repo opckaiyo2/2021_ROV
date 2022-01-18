@@ -31,8 +31,8 @@ class ROV_motor:
 		else:
 			power = joystick_value
 			
-		operation =  self.standard + self.max_rotain * power
-		self.pca.set_pwm(pin, 0, int(operation + offset))
+		operation =  self.standard - self.max_rotain * power
+		self.pca.set_pwm(pin, 0, int(operation - offset))
 
 	def forward_rotation(self, pin, joystick_value, offset):
 		if joystick_value < 0:
@@ -40,8 +40,8 @@ class ROV_motor:
 		else:
 			power = joystick_value
 			
-		operation = self.standard - self.max_rotain * power
-		self.pca.set_pwm(pin, 0, int(operation  - offset))
+		operation = self.standard + self.max_rotain * power
+		self.pca.set_pwm(pin, 0, int(operation  + offset))
 
 
 	def all_duty0(self):
@@ -60,50 +60,50 @@ class ROV_motor:
 
 	#remote
 	def forward(self,data):
-		self.reverse_rotation(0, data['joy_ly'], 10)
-		self.forward_rotation(1, data['joy_ly'], 0)
-		self.forward_rotation(2, data['joy_ly'], 0)
-		self.reverse_rotation(3, data['joy_ly'], 8)
+		self.forward_rotation(15, data['joy_ly'], self.m0)
+		self.forward_rotation(14, data['joy_ly'], self.m1)
+		self.reverse_rotation(11, data['joy_ly'], self.m4)
+		self.reverse_rotation(10, data['joy_ly'], self.m5)
 
 	def reverse(self,data):
-		self.forward_rotation(0,data['joy_ly'], 0)
-		self.reverse_rotation(1,data['joy_ly'], 10)
-		self.reverse_rotation(2,data['joy_ly'], 0)
-		self.forward_rotation(3,data['joy_ly'], 10)
+		self.reverse_rotation(15,data['joy_ly'], self.m0)
+		self.reverse_rotation(14,data['joy_ly'], self.m1)
+		self.forward_rotation(11,data['joy_ly'], self.m4)
+		self.forward_rotation(10,data['joy_ly'], self.m5)
 
 	def right_mov(self,data):
-		self.reverse_rotation(0,data['joy_lx'], 0)
-		self.reverse_rotation(1,data['joy_lx'], 0)
-		self.reverse_rotation(2,data['joy_lx'], 13)
-		self.reverse_rotation(3,data['joy_lx'], 13)
+		self.reverse_rotation(15,data['joy_lx'], self.m0)
+		self.forward_rotation(14,data['joy_lx'], self.m1)
+		self.reverse_rotation(11,data['joy_lx'], self.m4)
+		self.forward_rotation(10,data['joy_lx'], self.m5)
 
 	def left_mov(self,data):
-		self.forward_rotation(0,data['joy_lx'], 10)
-		self.forward_rotation(1,data['joy_lx'], 0)
-		self.forward_rotation(2,data['joy_lx'], 0)
-		self.forward_rotation(3,data['joy_lx'], 10)
+		self.forward_rotation(15,data['joy_lx'], self.m0)
+		self.reverse_rotation(14,data['joy_lx'], self.m1)
+		self.forward_rotation(11,data['joy_lx'], self.m4)
+		self.reverse_rotation(10,data['joy_lx'], self.m5)
 
 	def turn_right(self,data):
 		rotate = 0.9
-		self.forward_rotation(0,rotate, 0)
-		#self.forward_rotation(1,rotate, 0)
-		#self.forward_rotation(2,rotate, 0)
-		self.reverse_rotation(3,rotate, 0)
+		self.reverse_rotation(15,rotate, self.m0)
+		self.reverse_rotation(14,rotate, self.m1)
+		self.reverse_rotation(11,rotate, self.m4)
+		self.reverse_rotation(10,rotate, self.m5)
 
 	def turn_left(self,data):
 		rotate = 0.9
-		#self.reverse_rotation(0,rotate, 0)
-		self.reverse_rotation(1,rotate, 0)
-		self.forward_rotation(2,rotate, 0)
-		#self.reverse_rotation(3,rotate, 0)
+		self.forward_rotation(15,rotate, self.m0)
+		self.forward_rotation(14,rotate, self.m1)
+		self.forward_rotation(11,rotate, self.m4)
+		self.forward_rotation(10,rotate, self.m5)
 
 	def rise(self,data):
-		self.forward_rotation(4,data['joy_ry'], 0)
-		self.forward_rotation(5,data['joy_ry'], 0)
+		self.reverse_rotation(13,data['joy_ry'], self.m2)
+		self.reverse_rotation(12,data['joy_ry'], self.m3)
 
 	def descend(self,data):
-		self.reverse_rotation(4,data['joy_ry'], 0)
-		self.reverse_rotation(5,data['joy_ry'], 0)
+		self.forward_rotation(13,data['joy_ry'], self.m2)
+		self.forward_rotation(12,data['joy_ry'], self.m3)
 
 	####auto
 	def auto_forward(self,val,offset):
@@ -154,6 +154,15 @@ class ROV_motor:
 	def stop(self):
 		for i in range(16):
 			self.setup(i)
+
+	def stopL(self):
+		self.forward_rotation(15, 0, 0) #self 0
+		self.forward_rotation(14, 0, 0) #self 1
+		self.forward_rotation(11, 0, 0)
+		self.forward_rotation(10, 0, 0)
+	def stopR(self):
+		self.forward_rotation(13, 0, 0)#motor 2
+		self.forward_rotation(12, 0, 0)
 	#for ARM
 	def arm_set(self):
 	 self.pca.set_pwm(8, 0, 350 + self.arm_cnt)

@@ -14,7 +14,6 @@ def start():
     print('a')
     #socket.setdefaulttimeout(5)
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    #s.setblocking(False)
     s.bind(('0.0.0.0', 10020))#IPとポート番号を指定します
     offs =40
     offs2=10  #sensui
@@ -46,7 +45,7 @@ def start():
         #clientsocket.settimeout(None)
         #socket.setdefaulttimeout(1)
         print(f"Connection from {address} has been established!")
-        #print(f"Connection text socket from {address2}has been established!")
+        #print(f"Connection text socket from {address2}has been established!")0
         while True:
             msg = clientsocket.recv(1024)
             lenm=len(msg)
